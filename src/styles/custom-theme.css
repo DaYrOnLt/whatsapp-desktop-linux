@@ -1,0 +1,76 @@
+/* ============================================================
+   WhatsApp Desktop Linux — Tema Oscuro & Refinado (GBS Style)
+   ============================================================ */
+
+:root {
+  --gbs-primary: #10b981;
+  --gbs-primary-dark: #059669;
+  --gbs-bg-dark: #0f172a;
+  --gbs-panel-bg: #1e293b;
+  --gbs-accent: #0ea5e9;
+  --gbs-text-main: #f8fafc;
+  --gbs-text-muted: #94a3b8;
+  --gbs-border: rgba(255, 255, 255, 0.08);
+}
+
+/* Personalización de Scrollbars estilo Ubuntu/Next.js */
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2) !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.5) !important;
+}
+
+/* Transición suave al pasar el cursor sobre chats */
+div[role="row"]:hover {
+  transition: background-color 0.15s ease-in-out !important;
+}
+
+/* Retoques sutiles de cabecera y estética */
+header {
+  border-bottom: 1px solid var(--gbs-border) !important;
+}
+
+/* Sombras suaves y apariencia moderna */
+._1Xk8p, ._23P3O {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Mejoras en el área de chat */
+#main {
+  background-attachment: fixed !important;
+}
+
+/* Redondear burbujas de entrada y menús */
+div[role="textbox"] {
+  border-radius: 12px !important;
+}
+
+/* Notificación flotante de estado en app */
+.gbs-native-status-bar {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--gbs-primary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  pointer-events: none;
+  z-index: 99999;
+}

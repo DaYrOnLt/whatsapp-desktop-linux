@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sidebar — ZapZap Style Multi-Account</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: #0f172a;
+      width: 60px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .accounts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .account-btn {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #94a3b8;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .account-btn:hover {
+      background: #334155;
+      color: #f8fafc;
+      transform: scale(1.05);
+    }
+
+    .account-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #10b981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .account-btn.active::before {
+      content: '';
+      position: absolute;
+      left: -9px;
+      top: 10px;
+      bottom: 10px;
+      width: 4px;
+      background: #10b981;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .bottom-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="accounts-list">
+    <!-- Cuenta 1 Personal -->
+    <div class="account-btn active" id="acc-0-btn" title="Cuenta 1 - Personal (Ctrl+1)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span class="badge" id="badge-0">0</span>
+    </div>
+
+    <!-- Cuenta 2 Trabajo -->
+    <div class="account-btn" id="acc-1-btn" title="Cuenta 2 - Trabajo (Ctrl+2)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+      </svg>
+      <span class="badge" id="badge-1">0</span>
+    </div>
+  </div>
+
+  <div class="bottom-actions">
+    <!-- Ajustes -->
+    <button class="icon-btn" id="settings-btn" title="Ajustes y Preferencias">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    const btn0 = document.getElementById('acc-0-btn');
+    const btn1 = document.getElementById('acc-1-btn');
+    const settingsBtn = document.getElementById('settings-btn');
+
+    btn0.addEventListener('click', () => {
+      ipcRenderer.send('switch-account', 0);
+    });
+
+    btn1.addEventListener('click', () => {
+      ipcRenderer.send('switch-account', 1);
+    });
+
+    settingsBtn.addEventListener('click', () => {
+      ipcRenderer.send('open-preferences');
+    });
+
+    ipcRenderer.on('account-switched', (_, index) => {
+      btn0.classList.toggle('active', index === 0);
+      btn1.classList.toggle('active', index === 1);
+    });
+
+    ipcRenderer.on('unread-counts-updated', (_, counts) => {
+      const b0 = document.getElementById('badge-0');
+      const b1 = document.getElementById('badge-1');
+
+      if (counts[0] > 0) {
+        b0.innerText = counts[0] > 99 ? '99+' : counts[0];
+        b0.style.display = 'flex';
+      } else {
+        b0.style.display = 'none';
+      }
+
+      if (counts[1] > 0) {
+        b1.innerText = counts[1] > 99 ? '99+' : counts[1];
+        b1.style.display = 'flex';
+      } else {
+        b1.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

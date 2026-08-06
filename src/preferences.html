@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajustes — WhatsApp Desktop Linux</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --primary: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 24px;
+      user-select: none;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+
+    .option-row:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .option-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .option-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .option-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Switch toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .btn {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+    <h1>Ajustes de WhatsApp Desktop</h1>
+  </div>
+
+  <div class="section">
+    <div class="option-row">
+      <div class="option-info">
+        <div class="option-title">Minimizar a la bandeja del sistema</div>
+        <div class="option-desc">Al cerrar la ventana [X], la app permanece activa en el tray</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="minimizeToTray" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="option-row">
+      <div class="option-info">
+        <div class="option-title">Iniciar automáticamente</div>
+        <div class="option-desc">Abrir WhatsApp Desktop al encender tu PC Ubuntu</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoStart">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="option-row">
+      <div class="option-info">
+        <div class="option-title">Notificaciones nativas de Linux</div>
+        <div class="option-desc">Mostrar alertas flotantes en el escritorio con vista previa</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="nativeNotifications" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="option-row">
+      <div class="option-info">
+        <div class="option-title">Mantenimiento de sesión</div>
+        <div class="option-desc">Limpiar datos en caché si encuentras problemas de conexión</div>
+      </div>
+      <button class="btn" id="clearCacheBtn">Limpiar Caché</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    WhatsApp Desktop v1.0.0 (Linux Edition) — Desarrollado por Dayron & Antigravity
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    // Cargar configuraciones iniciales
+    ipcRenderer.invoke('get-settings').then(settings => {
+      document.getElementById('minimizeToTray').checked = settings.minimizeToTray ?? true;
+      document.getElementById('autoStart').checked = settings.autoStart ?? false;
+      document.getElementById('nativeNotifications').checked = settings.nativeNotifications ?? true;
+    });
+
+    // Guardar cambios
+    document.getElementById('minimizeToTray').addEventListener('change', e => {
+      ipcRenderer.send('save-setting', { key: 'minimizeToTray', value: e.target.checked });
+    });
+
+    document.getElementById('autoStart').addEventListener('change', e => {
+      ipcRenderer.send('save-setting', { key: 'autoStart', value: e.target.checked });
+    });
+
+    document.getElementById('nativeNotifications').addEventListener('change', e => {
+      ipcRenderer.send('save-setting', { key: 'nativeNotifications', value: e.target.checked });
+    });
+
+    document.getElementById('clearCacheBtn').addEventListener('click', () => {
+      if (confirm('¿Deseas limpiar la caché del navegador? Esto reiniciará la app.')) {
+        ipcRenderer.send('clear-cache');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "name": "whatsapp-desktop-linux",
+  "version": "1.0.0",
+  "description": "Cliente nativo de escritorio premium de WhatsApp para Linux (Ubuntu) con soporte Dual / Multi-Cuenta estilo ZapZap",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "mkdir -p dist && cp -r src/assets dist/ 2>/dev/null || true && cp src/preferences.html dist/ 2>/dev/null || true && cp src/index.html dist/ 2>/dev/null || true && cp src/styles/custom-theme.css dist/ 2>/dev/null || true",
+    "start": "npm run build && electron .",
+    "pack:deb": "npm run build && electron-builder --linux deb",
+    "pack:appimage": "npm run build && electron-builder --linux AppImage"
+  },
+  "keywords": [
+    "whatsapp",
+    "zapzap",
+    "multi-account",
+    "desktop",
+    "linux",
+    "ubuntu",
+    "electron",
+    "typescript"
+  ],
+  "author": "Dayron & Antigravity AI",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "electron": "^29.1.0",
+    "electron-builder": "^24.9.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "build": {
+    "appId": "com.gbs.whatsapp.desktop",
+    "productName": "WhatsApp Desktop",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*"
+    ],
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "category": "Network;InstantMessaging;",
+      "icon": "dist/assets/icon.png"
+    }
+  }
+}

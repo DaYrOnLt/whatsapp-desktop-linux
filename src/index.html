@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>WhatsApp Desktop — Multi-Cuenta</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: #0f172a;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    /* Sidebar ZapZap Style */
+    .sidebar {
+      width: 60px;
+      height: 100%;
+      background-color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 10;
+    }
+
+    .accounts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .account-btn {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #94a3b8;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .account-btn:hover {
+      background: #334155;
+      color: #f8fafc;
+      transform: scale(1.05);
+    }
+
+    .account-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #10b981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .account-btn.active::before {
+      content: '';
+      position: absolute;
+      left: -9px;
+      top: 10px;
+      bottom: 10px;
+      width: 4px;
+      background: #10b981;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .bottom-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Área de Contenido con posicionamiento por opacidad y soporte de popups */
+    .content-area {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background: #111b21;
+    }
+
+    webview {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      border: none;
+      transition: opacity 0.15s ease-in-out;
+    }
+
+    webview.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Lateral Estilo ZapZap -->
+  <div class="sidebar">
+    <div class="accounts-list">
+      <div class="account-btn active" id="btn-acc-0" title="Cuenta 1 - Personal (Ctrl+1)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="badge" id="badge-acc-0">0</span>
+      </div>
+
+      <div class="account-btn" id="btn-acc-1" title="Cuenta 2 - Trabajo (Ctrl+2)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <span class="badge" id="badge-acc-1">0</span>
+      </div>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="icon-btn" id="btn-settings" title="Ajustes y Preferencias">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenedor de Webviews con allowpopups="true" activado para llamadas/videollamadas -->
+  <div class="content-area">
+    <webview id="view-acc-0" class="active" partition="persist:whatsapp_account_1" src="https://web.whatsapp.com" useragent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" spellcheck="true" allowpopups="true"></webview>
+    <webview id="view-acc-1" partition="persist:whatsapp_account_2" src="https://web.whatsapp.com" useragent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" spellcheck="true" allowpopups="true"></webview>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    const btn0 = document.getElementById('btn-acc-0');
+    const btn1 = document.getElementById('btn-acc-1');
+    const view0 = document.getElementById('view-acc-0');
+    const view1 = document.getElementById('view-acc-1');
+    const settingsBtn = document.getElementById('btn-settings');
+    const badge0 = document.getElementById('badge-acc-0');
+    const badge1 = document.getElementById('badge-acc-1');
+
+    const unreadCounts = [0, 0];
+
+    function setActiveAccount(index) {
+      if (index === 0) {
+        btn0.classList.add('active');
+        btn1.classList.remove('active');
+        view0.classList.add('active');
+        view1.classList.remove('active');
+        view0.focus();
+      } else {
+        btn0.classList.remove('active');
+        btn1.classList.add('active');
+        view0.classList.remove('active');
+        view1.classList.add('active');
+        view1.focus();
+      }
+    }
+
+    btn0.addEventListener('click', () => setActiveAccount(0));
+    btn1.addEventListener('click', () => setActiveAccount(1));
+    settingsBtn.addEventListener('click', () => ipcRenderer.send('open-preferences'));
+
+    ipcRenderer.on('account-switched', (_, index) => setActiveAccount(index));
+
+    function setupWebview(view, index, accountName) {
+      view.addEventListener('dom-ready', () => {
+        // Inyectar CSS personalizado
+        view.insertCSS(`
+          ::-webkit-scrollbar { width: 6px !important; }
+          ::-webkit-scrollbar-thumb { background: rgba(16, 185, 129, 0.5) !important; border-radius: 4px !important; }
+          header { border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
+        `);
+
+        // Inyectar script de conteo de mensajes no leídos
+        view.executeJavaScript(`
+          setInterval(() => {
+            const match = document.title.match(/\\((\\d+)\\)/);
+            const count = match ? parseInt(match[1], 10) : 0;
+            console.log('UNREAD_COUNT:' + count);
+          }, 2000);
+        `);
+      });
+
+      // Escuchar apertura de nuevas ventanas / llamadas emergentes
+      view.addEventListener('new-window', (e) => {
+        if (e.url.includes('whatsapp.com')) {
+          // Dejar que Electron maneje la ventana flotante de llamada
+          return;
+        }
+      });
+
+      view.addEventListener('console-message', (e) => {
+        if (e.message.startsWith('UNREAD_COUNT:')) {
+          const count = parseInt(e.message.replace('UNREAD_COUNT:', ''), 10) || 0;
+          unreadCounts[index] = count;
+
+          const badgeEl = index === 0 ? badge0 : badge1;
+          if (count > 0) {
+            badgeEl.innerText = count > 99 ? '99+' : count;
+            badgeEl.style.display = 'flex';
+          } else {
+            badgeEl.style.display = 'none';
+          }
+
+          const total = unreadCounts[0] + unreadCounts[1];
+          ipcRenderer.send('update-unread-total', total);
+        }
+      });
+    }
+
+    setupWebview(view0, 0, 'Cuenta 1 (Personal)');
+    setupWebview(view1, 1, 'Cuenta 2 (Trabajo)');
+  </script>
+</body>
+</html>
