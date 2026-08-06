@@ -1,38 +1,42 @@
-import math
+import os
 from PIL import Image, ImageDraw
 
-def create_whatsapp_logo(filename, size=256):
-    # Crear imagen RGBA transparente
-    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
-
-    margin = int(size * 0.05)
-    circle_size = size - (2 * margin)
-
-    # 1. Dibujar círculo verde oficial (#25D366)
-    whatsapp_green = (37, 211, 102, 255)
-    draw.ellipse([margin, margin, margin + circle_size, margin + circle_size], fill=whatsapp_green)
-
-    # 2. Dibujar cola de la burbuja de diálogo
-    tail_points = [
-        (int(size * 0.28), int(size * 0.72)),
-        (int(size * 0.15), int(size * 0.85)),
-        (int(size * 0.38), int(size * 0.80))
-    ]
-    draw.polygon(tail_points, fill=whatsapp_green)
-
-    # 3. Dibujar ícono de teléfono/burbuja interna en blanco (#FFFFFF)
-    white = (255, 255, 255, 255)
-    phone_margin = int(size * 0.22)
-    phone_size = size - (2 * phone_margin)
+def create_hd_whatsapp_logo(size=512):
+    image = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
     
-    # Dibujar contorno suavizado blanco de la burbuja de teléfono
-    draw.ellipse([phone_margin, phone_margin, phone_margin + phone_size, phone_margin + phone_size], outline=white, width=int(size * 0.06))
+    # Anillo/Círculo Verde Oficial WhatsApp #25D366
+    green_color = (37, 211, 102, 255)
+    white_color = (255, 255, 255, 255)
+    
+    margin = int(size * 0.05)
+    draw.ellipse([margin, margin, size - margin, size - margin], fill=green_color)
+    
+    # Cola de la burbuja de diálogo
+    tail = [(int(size * 0.22), int(size * 0.72)), (int(size * 0.12), int(size * 0.88)), (int(size * 0.32), int(size * 0.82))]
+    draw.polygon(tail, fill=green_color)
+    
+    # Silueta de Teléfono en Blanco
+    center_x, center_y = size // 2, size // 2
+    r_outer = int(size * 0.30)
+    r_inner = int(size * 0.23)
+    
+    draw.ellipse([center_x - r_outer, center_y - r_outer, center_x + r_outer, center_y + r_outer], outline=white_color, width=int(size * 0.06))
+    
+    return image
 
-    # Guardar
-    img.save(filename, 'PNG')
+icon_512 = create_hd_whatsapp_logo(512)
+tray_128 = create_hd_whatsapp_logo(128)
 
-if __name__ == '__main__':
-    create_whatsapp_logo('src/assets/icon.png', 512)
-    create_whatsapp_logo('src/assets/tray-icon.png', 128)
-    print("Logo HD de WhatsApp generado exitosamente en src/assets/")
+base_dir = "/home/itsupport/proyectos/whatsapp-desktop-linux"
+
+os.makedirs(f"{base_dir}/src/assets", exist_ok=True)
+os.makedirs(f"{base_dir}/dist/assets", exist_ok=True)
+
+icon_512.save(f"{base_dir}/src/assets/icon.png", "PNG")
+icon_512.save(f"{base_dir}/dist/assets/icon.png", "PNG")
+
+tray_128.save(f"{base_dir}/src/assets/tray-icon.png", "PNG")
+tray_128.save(f"{base_dir}/dist/assets/tray-icon.png", "PNG")
+
+print("✅ ¡Logo clásico oficial de WhatsApp restaurado exitosamente!")
