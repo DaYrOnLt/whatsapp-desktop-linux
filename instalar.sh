@@ -38,6 +38,10 @@ fi
 mkdir -p "$APP_DIR"
 mkdir -p "$HOME/.local/share/applications"
 
+# Cerrar instancias en ejecución previa para desbloquear el ejecutable ('Text file busy')
+pkill -f whatsapp-desktop-linux 2>/dev/null || true
+fuser -k -9 "$APP_DIR/whatsapp-desktop-linux" 2>/dev/null || true
+
 echo "📦 Copiando archivos de la aplicación..."
 cp -r release/linux-unpacked/* "$APP_DIR/"
 cp -r dist/assets "$APP_DIR/" 2>/dev/null || true
