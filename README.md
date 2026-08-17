@@ -40,6 +40,20 @@ Cliente nativo de escritorio premium de WhatsApp para Linux (Ubuntu, Debian y de
 
 ---
 
+## 🗑️ Desinstalación
+
+Para eliminar la aplicación del sistema manteniendo tus datos de sesión:
+```bash
+./desinstalar.sh
+```
+
+Para eliminar la aplicación **junto con todos los datos y sesiones guardadas**:
+```bash
+./desinstalar.sh --purge
+```
+
+---
+
 ## 🛠️ Desarrollo Local
 
 ```bash

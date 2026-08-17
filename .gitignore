@@ -1,6 +1,7 @@
 node_modules/
 dist/
 release/
+scripts/
 *.zip
 *.tar.gz
 .DS_Store
