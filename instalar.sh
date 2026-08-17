@@ -11,17 +11,28 @@ DESKTOP_FILE="$HOME/.local/share/applications/whatsapp-desktop.desktop"
 # Si no existe la carpeta empaquetada, instalar dependencias y compilar automáticamente
 if [ ! -d "release/linux-unpacked" ]; then
     echo "⚡ Primera instalación en esta PC detectada. Compilando aplicación..."
-    if ! command -v npm &> /dev/null; then
-        echo "❌ Error: Node.js / npm no está instalado en este sistema."
-        echo "   Por favor instala Node.js (ej: sudo apt install nodejs npm) y vuelve a intentar."
+    
+    # Detectar gestor de paquetes (Priorizar pnpm por velocidad y seguridad)
+    if command -v pnpm &> /dev/null; then
+        PKG_MGR="pnpm"
+    elif command -v npm &> /dev/null; then
+        PKG_MGR="npm"
+    else
+        echo "❌ Error: Ni pnpm ni npm/Node.js están instalados en este sistema."
+        echo "   Por favor instala Node.js / pnpm (ej: sudo apt install nodejs npm o corepack enable) y vuelve a intentar."
         exit 1
     fi
-    echo "📦 Instalando dependencias (npm install)..."
-    npm install
-    echo "⚙️ Compilando código (npm run build)..."
-    npm run build
-    echo "🔨 Empaquetando ejecutable (npx electron-builder --linux dir)..."
-    npx electron-builder --linux dir
+
+    echo "📦 Instalando dependencias con $PKG_MGR..."
+    $PKG_MGR install
+    echo "⚙️ Compilando código ($PKG_MGR run build)..."
+    $PKG_MGR run build
+    echo "🔨 Empaquetando ejecutable (electron-builder)..."
+    if [ "$PKG_MGR" == "pnpm" ]; then
+        pnpm exec electron-builder --linux dir
+    else
+        npx electron-builder --linux dir
+    fi
 fi
 
 mkdir -p "$APP_DIR"

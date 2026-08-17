@@ -54,16 +54,19 @@ Para eliminar la aplicación **junto con todos los datos y sesiones guardadas**:
 
 ---
 
-## 🛠️ Desarrollo Local
+## 🛠️ Desarrollo Local (pnpm / npm)
+
+Se recomienda usar **`pnpm`** por su velocidad, eficiencia en espacio de disco y mayor seguridad contra dependencias fantasma.
 
 ```bash
-# Instalar dependencias
+# Con pnpm (Recomendado)
+pnpm install
+pnpm run build
+pnpm start
+
+# O con npm clásico
 npm install
-
-# Compilar proyecto TypeScript
 npm run build
-
-# Ejecutar en desarrollo
 npm start
 ```
 
