@@ -18,6 +18,15 @@ Cliente nativo de escritorio premium de WhatsApp para Linux (Ubuntu, Debian y de
 - 📞 **Llamadas y Videollamadas Emergentes:**
   - Soporte completo para ventanas flotantes emergentes de llamadas y videollamadas con permisos WebRTC (cámara y micrófono).
 
+- 👁️ **Modo Privacidad (Blur de Chats):**
+  - Botón de ojo en el sidebar que difumina los chats y nombres de contacto hasta pasar el cursor sobre ellos, ideal para lugares públicos u oficinas.
+
+- 🔍 **Control de Zoom de Interfaz:**
+  - Ajuste rápido de zoom usando **`Ctrl + +`**, **`Ctrl + -`** y **`Ctrl + 0`** (restablecer).
+
+- 🔒 **Candado de Instancia Única:**
+  - Garantiza que solo exista 1 proceso ejecutándose a la vez, enfocando la ventana activa si se hace clic de nuevo en el icono.
+
 - 📌 **Integración en Ubuntu:**
   - Icono flotante en la bandeja del sistema (Tray Icon) con contador de mensajes no leídos.
   - Atajo global **`Ctrl + Alt + W`** para mostrar u ocultar la ventana desde cualquier lugar.

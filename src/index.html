@@ -185,6 +185,13 @@
     </div>
 
     <div class="bottom-actions">
+      <button class="icon-btn" id="btn-privacy" title="Modo Privacidad (Difuminar Chats)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+
       <button class="icon-btn" id="btn-settings" title="Ajustes y Preferencias">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="3"></circle>
@@ -210,6 +217,7 @@
     const view0 = document.getElementById('view-acc-0');
     const view1 = document.getElementById('view-acc-1');
     const view2 = document.getElementById('view-acc-2');
+    const privacyBtn = document.getElementById('btn-privacy');
     const settingsBtn = document.getElementById('btn-settings');
     const badge0 = document.getElementById('badge-acc-0');
     const badge1 = document.getElementById('badge-acc-1');
@@ -220,6 +228,8 @@
     const badges = [badge0, badge1, badge2];
 
     const unreadCounts = [0, 0, 0];
+    let isPrivacyMode = false;
+    let currentZoomKey = 1.0;
 
     function setActiveAccount(index) {
       buttons.forEach((btn, i) => {
@@ -238,6 +248,41 @@
     btn1.addEventListener('click', () => setActiveAccount(1));
     btn2.addEventListener('click', () => setActiveAccount(2));
     settingsBtn.addEventListener('click', () => ipcRenderer.send('open-preferences'));
+
+    // Alternar Modo Privacidad (Blur de chats)
+    privacyBtn.addEventListener('click', () => {
+      isPrivacyMode = !isPrivacyMode;
+      privacyBtn.style.color = isPrivacyMode ? '#10b981' : '#64748b';
+
+      const privacyCSS = `
+        #pane-side, ._ak8l, ._ak8n, div[role="row"] span { filter: blur(7px) !important; transition: filter 0.2s !important; }
+        #pane-side:hover, ._ak8l:hover, ._ak8n:hover, div[role="row"]:hover span { filter: none !important; }
+      `;
+
+      views.forEach(v => {
+        if (isPrivacyMode) {
+          v.insertCSS(privacyCSS).then(key => v._privacyCssKey = key);
+        } else if (v._privacyCssKey) {
+          v.removeInsertedCSS(v._privacyCssKey);
+        }
+      });
+    });
+
+    // Controladores de Zoom
+    ipcRenderer.on('zoom-in', () => {
+      currentZoomKey = Math.min(currentZoomKey + 0.1, 1.8);
+      views.forEach(v => v.setZoomFactor(currentZoomKey));
+    });
+
+    ipcRenderer.on('zoom-out', () => {
+      currentZoomKey = Math.max(currentZoomKey - 0.1, 0.6);
+      views.forEach(v => v.setZoomFactor(currentZoomKey));
+    });
+
+    ipcRenderer.on('zoom-reset', () => {
+      currentZoomKey = 1.0;
+      views.forEach(v => v.setZoomFactor(1.0));
+    });
 
     ipcRenderer.on('account-switched', (_, index) => setActiveAccount(index));
 

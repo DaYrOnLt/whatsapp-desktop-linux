@@ -9,6 +9,22 @@ app.setName('whatsapp-desktop-linux');
 app.commandLine.appendSwitch('no-sandbox');
 app.commandLine.appendSwitch('disable-gpu-sandbox');
 
+// Control de instancia única para evitar bloqueos de base de datos LevelDB/SQLite
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  console.log('Ya existe una instancia de WhatsApp Desktop ejecutándose. Enfocando ventana existente...');
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+}
+
 let mainWindow: BrowserWindow | null = null;
 let preferencesWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
@@ -50,11 +66,22 @@ function configurePersistentSessions() {
     // Habilitar corrector ortográfico nativo preciso en Español
     customSession.setSpellCheckerLanguages(['es-MX', 'es-ES', 'es']);
 
-    // Conceder automáticamente todos los permisos WebRTC (cámara, micrófono, notificaciones, popups de llamada)
-    customSession.setPermissionRequestHandler((webContents, permission, callback) => callback(true));
-    customSession.setPermissionCheckHandler(() => true);
+    // Conceder permisos WebRTC (cámara, micrófono, notificaciones) solo si provienen de dominios de WhatsApp
+    customSession.setPermissionRequestHandler((webContents, permission, callback) => {
+      const url = webContents.getURL();
+      if (url.includes('whatsapp.com') || url.includes('web.whatsapp.com') || url.startsWith('about:blank')) {
+        callback(true);
+      } else {
+        console.warn(`Permiso rechazado para origen no confiable: ${url} (${permission})`);
+        callback(false);
+      }
+    });
 
-    customSession.allowNTLMCredentialsForDomains('*');
+    customSession.setPermissionCheckHandler((webContents, permission, requestingOrigin) => {
+      return requestingOrigin.includes('whatsapp.com') || requestingOrigin.includes('web.whatsapp.com');
+    });
+
+    customSession.allowNTLMCredentialsForDomains('*.whatsapp.com');
   });
 }
 
@@ -295,6 +322,18 @@ ipcMain.on('save-setting', (_, data: { key: string; value: any }) => {
   }
 });
 
+// Limpieza de caché de sesiones sin cerrar sesión
+ipcMain.on('clear-cache', async () => {
+  const partitions = ['persist:whatsapp_account_1', 'persist:whatsapp_account_2', 'persist:whatsapp_account_3'];
+  for (const partitionName of partitions) {
+    const customSession = session.fromPartition(partitionName);
+    await customSession.clearCache();
+    await customSession.clearStorageData({ storages: ['serviceworkers', 'cachestorage'] });
+  }
+  app.relaunch();
+  app.exit(0);
+});
+
 // Inicialización de la App
 app.whenReady().then(() => {
   createMainWindow();
@@ -305,6 +344,11 @@ app.whenReady().then(() => {
   globalShortcut.register('Ctrl+1', () => switchAccount(0));
   globalShortcut.register('Ctrl+2', () => switchAccount(1));
   globalShortcut.register('Ctrl+3', () => switchAccount(2));
+
+  // Atajos de zoom de interfaz
+  globalShortcut.register('CommandOrControl+=', () => mainWindow?.webContents.send('zoom-in'));
+  globalShortcut.register('CommandOrControl+-', () => mainWindow?.webContents.send('zoom-out'));
+  globalShortcut.register('CommandOrControl+0', () => mainWindow?.webContents.send('zoom-reset'));
 });
 
 app.on('window-all-closed', () => {
