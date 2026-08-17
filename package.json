@@ -1,6 +1,7 @@
 {
   "name": "whatsapp-desktop-linux",
   "version": "1.0.0",
+  "packageManager": "pnpm@11.22.0",
   "description": "Cliente nativo de escritorio premium de WhatsApp para Linux (Ubuntu) con soporte Dual / Multi-Cuenta estilo ZapZap",
   "main": "dist/main.js",
   "scripts": {
