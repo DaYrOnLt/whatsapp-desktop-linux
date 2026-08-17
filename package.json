@@ -7,6 +7,7 @@
     "build": "tsc && npm run copy-assets",
     "copy-assets": "mkdir -p dist && cp -r src/assets dist/ 2>/dev/null || true && cp src/preferences.html dist/ 2>/dev/null || true && cp src/index.html dist/ 2>/dev/null || true && cp src/styles/custom-theme.css dist/ 2>/dev/null || true",
     "start": "npm run build && electron .",
+    "pack:dir": "npm run build && electron-builder --linux dir",
     "pack:deb": "npm run build && electron-builder --linux deb",
     "pack:appimage": "npm run build && electron-builder --linux AppImage"
   },

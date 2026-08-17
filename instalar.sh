@@ -8,6 +8,22 @@ echo "=========================================================="
 APP_DIR="$HOME/.local/share/whatsapp-desktop-linux"
 DESKTOP_FILE="$HOME/.local/share/applications/whatsapp-desktop.desktop"
 
+# Si no existe la carpeta empaquetada, instalar dependencias y compilar automáticamente
+if [ ! -d "release/linux-unpacked" ]; then
+    echo "⚡ Primera instalación en esta PC detectada. Compilando aplicación..."
+    if ! command -v npm &> /dev/null; then
+        echo "❌ Error: Node.js / npm no está instalado en este sistema."
+        echo "   Por favor instala Node.js (ej: sudo apt install nodejs npm) y vuelve a intentar."
+        exit 1
+    fi
+    echo "📦 Instalando dependencias (npm install)..."
+    npm install
+    echo "⚙️ Compilando código (npm run build)..."
+    npm run build
+    echo "🔨 Empaquetando ejecutable (npx electron-builder --linux dir)..."
+    npx electron-builder --linux dir
+fi
+
 mkdir -p "$APP_DIR"
 mkdir -p "$HOME/.local/share/applications"
 
