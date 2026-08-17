@@ -39,7 +39,7 @@ const currentSettings = loadSettings();
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
 function configurePersistentSessions() {
-  const partitions = ['persist:whatsapp_account_1', 'persist:whatsapp_account_2'];
+  const partitions = ['persist:whatsapp_account_1', 'persist:whatsapp_account_2', 'persist:whatsapp_account_3'];
 
   partitions.forEach((partitionName) => {
     const customSession = session.fromPartition(partitionName);
@@ -171,6 +171,10 @@ function createTray() {
       label: '💼 Cuenta 2 (Trabajo)',
       click: () => switchAccount(1)
     },
+    {
+      label: '📱 Cuenta 3 (Adicional)',
+      click: () => switchAccount(2)
+    },
     { type: 'separator' },
     {
       label: 'Mostrar / Ocultar WhatsApp',
@@ -300,6 +304,7 @@ app.whenReady().then(() => {
   globalShortcut.register('Ctrl+Alt+W', () => toggleWindowVisibility());
   globalShortcut.register('Ctrl+1', () => switchAccount(0));
   globalShortcut.register('Ctrl+2', () => switchAccount(1));
+  globalShortcut.register('Ctrl+3', () => switchAccount(2));
 });
 
 app.on('window-all-closed', () => {

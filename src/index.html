@@ -174,6 +174,16 @@
         </svg>
         <span class="badge" id="badge-acc-1">0</span>
       </div>
+
+      <div class="account-btn" id="btn-acc-2" title="Cuenta 3 - Adicional (Ctrl+3)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="17" y1="11" x2="23" y2="11"></line>
+        </svg>
+        <span class="badge" id="badge-acc-2">0</span>
+      </div>
     </div>
 
     <div class="bottom-actions">
@@ -190,6 +200,7 @@
   <div class="content-area">
     <webview id="view-acc-0" class="active" partition="persist:whatsapp_account_1" src="https://web.whatsapp.com" useragent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" spellcheck="true" allowpopups="true"></webview>
     <webview id="view-acc-1" partition="persist:whatsapp_account_2" src="https://web.whatsapp.com" useragent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" spellcheck="true" allowpopups="true"></webview>
+    <webview id="view-acc-2" partition="persist:whatsapp_account_3" src="https://web.whatsapp.com" useragent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" spellcheck="true" allowpopups="true"></webview>
   </div>
 
   <script>
@@ -197,32 +208,37 @@
 
     const btn0 = document.getElementById('btn-acc-0');
     const btn1 = document.getElementById('btn-acc-1');
+    const btn2 = document.getElementById('btn-acc-2');
     const view0 = document.getElementById('view-acc-0');
     const view1 = document.getElementById('view-acc-1');
+    const view2 = document.getElementById('view-acc-2');
     const settingsBtn = document.getElementById('btn-settings');
     const badge0 = document.getElementById('badge-acc-0');
     const badge1 = document.getElementById('badge-acc-1');
+    const badge2 = document.getElementById('badge-acc-2');
 
-    const unreadCounts = [0, 0];
+    const buttons = [btn0, btn1, btn2];
+    const views = [view0, view1, view2];
+    const badges = [badge0, badge1, badge2];
+
+    const unreadCounts = [0, 0, 0];
 
     function setActiveAccount(index) {
-      if (index === 0) {
-        btn0.classList.add('active');
-        btn1.classList.remove('active');
-        view0.classList.add('active');
-        view1.classList.remove('active');
-        view0.focus();
-      } else {
-        btn0.classList.remove('active');
-        btn1.classList.add('active');
-        view0.classList.remove('active');
-        view1.classList.add('active');
-        view1.focus();
-      }
+      buttons.forEach((btn, i) => {
+        if (i === index) {
+          btn.classList.add('active');
+          views[i].classList.add('active');
+          views[i].focus();
+        } else {
+          btn.classList.remove('active');
+          views[i].classList.remove('active');
+        }
+      });
     }
 
     btn0.addEventListener('click', () => setActiveAccount(0));
     btn1.addEventListener('click', () => setActiveAccount(1));
+    btn2.addEventListener('click', () => setActiveAccount(2));
     settingsBtn.addEventListener('click', () => ipcRenderer.send('open-preferences'));
 
     ipcRenderer.on('account-switched', (_, index) => setActiveAccount(index));
@@ -259,15 +275,17 @@
           const count = parseInt(e.message.replace('UNREAD_COUNT:', ''), 10) || 0;
           unreadCounts[index] = count;
 
-          const badgeEl = index === 0 ? badge0 : badge1;
-          if (count > 0) {
-            badgeEl.innerText = count > 99 ? '99+' : count;
-            badgeEl.style.display = 'flex';
-          } else {
-            badgeEl.style.display = 'none';
+          const badgeEl = badges[index];
+          if (badgeEl) {
+            if (count > 0) {
+              badgeEl.innerText = count > 99 ? '99+' : count;
+              badgeEl.style.display = 'flex';
+            } else {
+              badgeEl.style.display = 'none';
+            }
           }
 
-          const total = unreadCounts[0] + unreadCounts[1];
+          const total = unreadCounts.reduce((a, b) => a + b, 0);
           ipcRenderer.send('update-unread-total', total);
         }
       });
@@ -275,6 +293,7 @@
 
     setupWebview(view0, 0, 'Cuenta 1 (Personal)');
     setupWebview(view1, 1, 'Cuenta 2 (Trabajo)');
+    setupWebview(view2, 2, 'Cuenta 3 (Adicional)');
   </script>
 </body>
 </html>

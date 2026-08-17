@@ -137,6 +137,17 @@
       </svg>
       <span class="badge" id="badge-1">0</span>
     </div>
+
+    <!-- Cuenta 3 Adicional -->
+    <div class="account-btn" id="acc-2-btn" title="Cuenta 3 - Adicional (Ctrl+3)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="8.5" cy="7" r="4"></circle>
+        <line x1="20" y1="8" x2="20" y2="14"></line>
+        <line x1="17" y1="11" x2="23" y2="11"></line>
+      </svg>
+      <span class="badge" id="badge-2">0</span>
+    </div>
   </div>
 
   <div class="bottom-actions">
@@ -154,6 +165,7 @@
 
     const btn0 = document.getElementById('acc-0-btn');
     const btn1 = document.getElementById('acc-1-btn');
+    const btn2 = document.getElementById('acc-2-btn');
     const settingsBtn = document.getElementById('settings-btn');
 
     btn0.addEventListener('click', () => {
@@ -164,6 +176,10 @@
       ipcRenderer.send('switch-account', 1);
     });
 
+    btn2.addEventListener('click', () => {
+      ipcRenderer.send('switch-account', 2);
+    });
+
     settingsBtn.addEventListener('click', () => {
       ipcRenderer.send('open-preferences');
     });
@@ -171,11 +187,13 @@
     ipcRenderer.on('account-switched', (_, index) => {
       btn0.classList.toggle('active', index === 0);
       btn1.classList.toggle('active', index === 1);
+      btn2.classList.toggle('active', index === 2);
     });
 
     ipcRenderer.on('unread-counts-updated', (_, counts) => {
       const b0 = document.getElementById('badge-0');
       const b1 = document.getElementById('badge-1');
+      const b2 = document.getElementById('badge-2');
 
       if (counts[0] > 0) {
         b0.innerText = counts[0] > 99 ? '99+' : counts[0];
@@ -189,6 +207,13 @@
         b1.style.display = 'flex';
       } else {
         b1.style.display = 'none';
+      }
+
+      if (counts[2] > 0) {
+        b2.innerText = counts[2] > 99 ? '99+' : counts[2];
+        b2.style.display = 'flex';
+      } else {
+        b2.style.display = 'none';
       }
     });
   </script>

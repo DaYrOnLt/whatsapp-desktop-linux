@@ -7,9 +7,9 @@ Cliente nativo de escritorio premium de WhatsApp para Linux (Ubuntu, Debian y de
 ## 🔥 Características Principales
 
 - 🟢 **Soporte Multi-Cuenta (Estilo ZapZap):**
-  - Manejo de **Cuenta 1 (Personal)** y **Cuenta 2 (Trabajo)** de forma 100% aislada.
-  - Sesiones persistentes e independientes en disco (`persist:whatsapp_account_1` y `persist:whatsapp_account_2`).
-  - Cambia entre cuentas instantáneamente usando los atajos **`Ctrl + 1`** y **`Ctrl + 2`**.
+  - Manejo de **Cuenta 1 (Personal)**, **Cuenta 2 (Trabajo)** y **Cuenta 3 (Adicional)** de forma 100% aislada.
+  - Sesiones persistentes e independientes en disco (`persist:whatsapp_account_1`, `persist:whatsapp_account_2` y `persist:whatsapp_account_3`).
+  - Cambia entre cuentas instantáneamente usando los atajos **`Ctrl + 1`**, **`Ctrl + 2`** y **`Ctrl + 3`**.
 
 - ✍️ **Corrector Ortográfico Nativo en Español:**
   - Motor de corrección en **Español (México y España)** con subrayado rojo en tiempo real.
