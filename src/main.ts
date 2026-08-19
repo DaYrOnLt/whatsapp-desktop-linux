@@ -5,9 +5,11 @@ import * as fs from 'fs';
 // Configurar el nombre oficial del proceso y WM_CLASS para Ubuntu / Linux Dock
 app.setName('whatsapp-desktop-linux');
 
-// Desactivar el sandbox SUID de Chromium para evitar fallos de inicio en Linux
+// Desactivar el sandbox y la aceleración por hardware de GPU en Linux para evitar recuadros blancos de renderizado en video/llamadas
+app.disableHardwareAcceleration();
 app.commandLine.appendSwitch('no-sandbox');
 app.commandLine.appendSwitch('disable-gpu-sandbox');
+app.commandLine.appendSwitch('disable-gpu-compositing');
 
 // Control de instancia única para evitar bloqueos de base de datos LevelDB/SQLite
 const gotTheLock = app.requestSingleInstanceLock();
@@ -89,16 +91,20 @@ function configurePersistentSessions() {
 app.on('web-contents-created', (_, contents) => {
   // Manejar ventanas emergentes / popups (Llamadas y Videollamadas de WhatsApp)
   contents.setWindowOpenHandler(({ url }) => {
-    // Permitir popups internos de WhatsApp Web (llamadas/videollamadas)
+    // Permitir popups internos de WhatsApp Web (llamadas/videollamadas y reproductores)
     if (url.includes('whatsapp.com') || url.includes('web.whatsapp.com') || url.startsWith('about:blank')) {
+      const parentSession = contents.session;
+
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
           autoHideMenuBar: true,
+          backgroundColor: '#111b21',
           icon: path.join(__dirname, 'assets/icon.png'),
           webPreferences: {
             nodeIntegration: false,
-            contextIsolation: true
+            contextIsolation: true,
+            session: parentSession
           }
         }
       };
@@ -158,6 +164,7 @@ function createMainWindow() {
     minWidth: 850,
     minHeight: 550,
     title: 'WhatsApp Desktop',
+    backgroundColor: '#0f172a',
     icon: path.join(__dirname, 'assets/icon.png'),
     autoHideMenuBar: true,
     webPreferences: {
